@@ -25,10 +25,8 @@ jobs:
     steps:
       - name: Test
         id: test
-        run: $env:GITHUB_OUTPUT="test=1"
+        run: $env:TEST="111"
       - name: Test2
-        env:
-          TEST: ${{ steps.test.outputs.test }}
         run: echo $TEST
       - name: Checkout
         uses: actions/checkout@v4

@@ -25,13 +25,9 @@ jobs:
     steps:
       - name: Test
         id: test
-        run: echo "random_number=132" >> $GITHUB_OUTPUT
+        run: $env:TEST="aaaaa"
       - name: Test2
-        env:
-          TEST: ${{ steps.test.outputs.random_number }}
-        run: |
-          echo $TEST
-          echo ${{ steps.test.outputs.random_number }}
+        run: echo $TEST
       - name: Checkout
         uses: actions/checkout@v4
       - name: Setup Git

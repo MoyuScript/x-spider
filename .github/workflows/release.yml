@@ -25,7 +25,7 @@ jobs:
     steps:
       - name: Test
         id: test
-        run: $GITHUB_OUTPUT="test=1"
+        run: $env:GITHUB_OUTPUT="test=1"
       - name: Test2
         env:
           TEST: ${{ steps.test.outputs.test }}

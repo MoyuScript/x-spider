@@ -9,7 +9,7 @@ on:
       - "/postcss.config.js"
       - "/tailwind.config.js"
       - "/vite.config.ts"
-  workflow_dispatch: 
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -23,6 +23,10 @@ jobs:
     name: Release
     runs-on: windows-latest
     steps:
+      - name: Setup Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git conifg user.email "41898282+github-actions[bot]@users.noreply.github.com"
       - name: Checkout
         uses: actions/checkout@v4
       - name: Setup NodeJS

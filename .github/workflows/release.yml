@@ -29,7 +29,7 @@ jobs:
       - name: Test2
         run: |
           echo $TEST
-          echo 123444
+          echo $GITHUB_OUTPUT
       - name: Checkout
         uses: actions/checkout@v4
       - name: Setup Git

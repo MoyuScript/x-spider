@@ -59,11 +59,12 @@ jobs:
           git push
           git push --tags
       - name: Release
+        shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          $VERSION=(git describe --abbrev=0 --tags)
-          gh release create $VERSION "src-tauri/target/release/bundle/nsis/" --prerelease --notes "该发布为自动构建的预览版本。" --title $VERSION
+          VERSION=$(git describe --abbrev=0 --tags)
+          gh release create $VERSION ./src-tauri/target/release/bundle/nsis/* --prerelease --notes "该发布为自动构建的预览版本。" --generate-notes --title $VERSION
       - name: Cleanup Bundles
         run: |
           rm -Recurse -Force src-tauri/target/release/bundle

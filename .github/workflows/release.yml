@@ -33,17 +33,35 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: pnpm
+      - name: Cache Rust Builds
+        id: cache-rust-builds
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            src-tauri/target/
+          key: ${{ runner.os }}-cache-rust-builds
       - name: Install dependencies
         run: |
           npm i -g pnpm
           pnpm i
       - name: Bump version
-        run: pnpm version prerelease
+        run: "pnpm version prerelease -m 'chore: Auto release %s'"
       - name: Push
         run: git push
       - name: Build
         run: pnpm tauri build
       - name: Release
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           $CURRENT_VERSION="git describe --tags --abbrev=0"
           gh release create $CURRENT_VERSION "./src-tauri/target/release/bundle/*" --prerelease --notes "该发布为自动构建的预览版本。" --title $CURRENT_VERSION
+      - name: Cleanup Bundles
+        run: |
+          rm -Recurse -Force src-tauri/target/release/bundle
+          rm ".\src-tauri\target\release\x-spider.d",".\src-tauri\target\release\x-spider.exe",".\src-tauri\target\release\x_spider.pdb"

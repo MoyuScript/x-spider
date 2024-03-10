@@ -52,10 +52,12 @@ jobs:
       - name: Bump version
         id: bumpVersion
         run: 'pnpm version prerelease -m "chore: Auto release %s"'
-      - name: Push
-        run: git push
       - name: Build
         run: pnpm tauri build
+      - name: Push
+        run: |
+          git push
+          git push --tags
       - name: Release
         env:
           GH_TOKEN: ${{ github.token }}

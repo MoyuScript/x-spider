@@ -23,11 +23,6 @@ jobs:
     name: Release
     runs-on: windows-latest
     steps:
-      - name: Test
-        id: test
-        run: $env:TEST="aaaaa"
-      - name: Test2
-        run: echo $TEST
       - name: Checkout
         uses: actions/checkout@v4
       - name: Setup Git
@@ -56,9 +51,7 @@ jobs:
         run: pnpm i
       - name: Bump version
         id: bumpVersion
-        run: |
-          $GITHUB_OUTPUT="version=$(pnpm version prerelease -m "chore: Auto release %s")"
-          echo $GITHUB_OUTPUT
+        run: 'pnpm version prerelease -m "chore: Auto release %s"'
       - name: Push
         run: git push
       - name: Build
@@ -66,8 +59,9 @@ jobs:
       - name: Release
         env:
           GH_TOKEN: ${{ github.token }}
-          BUMP_VERSION: ${{ steps.bumpVersion.outputs.version }}
-        run: gh release create $BUMP_VERSION "src-tauri/target/release/bundle/nsis/*" --prerelease --notes "该发布为自动构建的预览版本。" --title $BUMP_VERSION
+        run: |
+          $VERSION=(git describe --abbrev=0 --tags)
+          gh release create $VERSION "src-tauri/target/release/bundle/nsis/*" --prerelease --notes "该发布为自动构建的预览版本。" --title $VERSION
       - name: Cleanup Bundles
         run: |
           rm -Recurse -Force src-tauri/target/release/bundle

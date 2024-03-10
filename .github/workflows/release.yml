@@ -16,7 +16,7 @@ permissions:
 
 concurrency:
   group: release
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   release:
@@ -29,6 +29,8 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v3
       - name: Setup NodeJS
         uses: actions/setup-node@v4
         with:
@@ -46,9 +48,7 @@ jobs:
             src-tauri/target/
           key: ${{ runner.os }}-cache-rust-builds
       - name: Install dependencies
-        run: |
-          npm i -g pnpm
-          pnpm i
+        run: pnpm i
       - name: Bump version
         run: "pnpm version prerelease -m 'chore: Auto release %s'"
       - name: Push

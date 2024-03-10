@@ -27,7 +27,9 @@ jobs:
         id: test
         run: $env:TEST="111"
       - name: Test2
-        run: echo $TEST
+        run: |
+          echo $TEST
+          echo 123444
       - name: Checkout
         uses: actions/checkout@v4
       - name: Setup Git

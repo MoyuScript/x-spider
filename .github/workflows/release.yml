@@ -52,8 +52,8 @@ jobs:
       - name: Bump version
         id: bumpVersion
         run: |
-          $env:GITHUB_OUTPUT="version=$(pnpm version prerelease -m "chore: Auto release %s")"
-          echo $env:GITHUB_OUTPUT
+          $GITHUB_OUTPUT="version=$(pnpm version prerelease -m "chore: Auto release %s")"
+          echo $GITHUB_OUTPUT
       - name: Push
         run: git push
       - name: Build

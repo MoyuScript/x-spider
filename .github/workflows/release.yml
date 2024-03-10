@@ -50,7 +50,8 @@ jobs:
       - name: Install dependencies
         run: pnpm i
       - name: Bump version
-        run: "pnpm version prerelease -m 'chore: Auto release %s'"
+        id: bumpVersion
+        run: '$env:GITHUB_OUTPUT="version=$(pnpm version prerelease -m "chore: Auto release %s")"'
       - name: Push
         run: git push
       - name: Build
@@ -58,9 +59,8 @@ jobs:
       - name: Release
         env:
           GH_TOKEN: ${{ github.token }}
-        run: |
-          $CURRENT_VERSION="git describe --tags --abbrev=0"
-          gh release create $CURRENT_VERSION "./src-tauri/target/release/bundle/*" --prerelease --notes "该发布为自动构建的预览版本。" --title $CURRENT_VERSION
+          BUMP_VERSION: ${{ steps.bumpVersion.outputs.version }}
+        run: gh release create $BUMP_VERSION "src-tauri/target/release/bundle/nsis/*" --prerelease --notes "该发布为自动构建的预览版本。" --title $BUMP_VERSION
       - name: Cleanup Bundles
         run: |
           rm -Recurse -Force src-tauri/target/release/bundle

@@ -23,6 +23,13 @@ jobs:
     name: Release
     runs-on: windows-latest
     steps:
+      - name: Test
+        id: test
+        run: $GITHUB_OUTPUT="test=1"
+      - name: Test2
+        env:
+          TEST: ${{ steps.test.outputs.test }}
+        run: echo $TEST
       - name: Checkout
         uses: actions/checkout@v4
       - name: Setup Git
